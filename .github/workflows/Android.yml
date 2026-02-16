@@ -5,32 +5,30 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-    - name: Install dependencies
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install system dependencies
       run: |
         sudo apt update
         sudo apt install -y \
-          python3-pip \
-          build-essential \
-          git \
-          zip \
-          unzip \
+          zip unzip git \
           openjdk-17-jdk \
-          autoconf \
-          libtool \
-          pkg-config \
+          build-essential \
+          autoconf libtool pkg-config \
           zlib1g-dev
 
-        pip install buildozer cython kivy kivymd pillow plyer
-
-    - name: Install Android SDK and NDK
+    - name: Install Buildozer
       run: |
-        yes | buildozer android update
+        pip install --upgrade pip
+        pip install buildozer cython
 
     - name: Build APK
       run: |
